@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="eacc7cd85cee4174bf7dd65c059bf43b" Name="Diagram1">
+        <EntityTypeShape EntityType="PhotoSocialDBModel.Comment" Width="1.5" PointX="5.25" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PhotoSocialDBModel.Follow" Width="1.5" PointX="3" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PhotoSocialDBModel.Photo" Width="1.5" PointX="3" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PhotoSocialDBModel.User" Width="1.5" PointX="0.75" PointY="3.625" IsExpanded="true" />
+        <AssociationConnector Association="PhotoSocialDBModel.FK__Comments__PhotoI__2E1BDC42" ManuallyRouted="false" />
+        <AssociationConnector Association="PhotoSocialDBModel.FK__Comments__UserId__2F10007B" ManuallyRouted="false" />
+        <AssociationConnector Association="PhotoSocialDBModel.FK__Follows__Followe__32E0915F" ManuallyRouted="false" />
+        <AssociationConnector Association="PhotoSocialDBModel.FK__Follows__Followi__33D4B598" ManuallyRouted="false" />
+        <AssociationConnector Association="PhotoSocialDBModel.FK__Photos__UserId__2A4B4B5E" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

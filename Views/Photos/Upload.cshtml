@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Đăng ảnh";
+}
+
+<h2>Đăng ảnh mới</h2>
+
+@if (ViewBag.Error != null)
+{
+    <p style="color:red">
+        @ViewBag.Error
+    </p>
+}
+
+@using (Html.BeginForm(
+    "Upload",
+    "Photos",
+    FormMethod.Post,
+    new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        <label>Chọn ảnh:</label>
+
+        <input type="file"
+               name="image"
+               accept="image/*"
+               required />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Mô tả ảnh:</label>
+
+        <textarea name="caption"></textarea>
+    </div>
+
+    <br />
+
+    <button type="submit">
+        Đăng ảnh
+    </button>
+}

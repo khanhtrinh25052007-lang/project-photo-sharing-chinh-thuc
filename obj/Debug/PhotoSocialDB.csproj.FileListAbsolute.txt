@@ -1,0 +1,2 @@
+C:\Users\TNgoan\Downloads\PhotoSocialDB\obj\Debug\PhotoSocialDB.csproj.AssemblyReference.cache
+C:\Users\TNgoan\Downloads\PhotoSocialDB\obj\Debug\PhotoSocialDB.csproj.CoreCompileInputs.cache
