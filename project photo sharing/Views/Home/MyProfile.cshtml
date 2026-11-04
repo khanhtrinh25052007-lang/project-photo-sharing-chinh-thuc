@@ -1,0 +1,143 @@
+﻿@model IEnumerable<project_photo_sharing.Models.PhotoPost>
+@{ <a href="@Url.Action("Index", "Home")" style="background-color: #4a90e2; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: inline-block;">
+
+</a> }
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>Trang cá nhân - PixelShare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fafafa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* NAVBAR GIỐNG TRANG CHỦ */
+        #top-banner {
+            background-color: white;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .avatar-small {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* KHU VỰC HỒ SƠ */
+        .profile-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+
+        .profile-info h2 {
+            margin: 0 0 15px 0;
+            font-size: 28px;
+            font-weight: normal;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 16px;
+        }
+
+            .profile-stats span {
+                font-weight: bold;
+            }
+
+        /* LƯỚI KHO ẢNH 3 CỘT */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Tạo 3 cột đều nhau */
+            gap: 15px;
+        }
+
+        .photo-item {
+            aspect-ratio: 1 / 1; /* Ép ảnh thành hình vuông */
+            overflow: hidden;
+            background-color: #eee;
+        }
+
+            .photo-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Cắt vừa khung vuông không bị méo */
+            }
+    </style>
+</head>
+<body>
+    <!-- THANH ĐIỀU HƯỚNG -->
+    <div id="top-banner">
+        <a href="@Url.Action("Index", "Home")" class="logo-brand">PixelShare</a>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <img src="@Session["AvatarUrl"]" class="avatar-small">
+            <span style="font-weight: bold;">@Session["Username"]</span>
+            <a href="@Url.Action("Logout", "Account")" style="color: red; text-decoration: none; font-size: 14px;">Đăng xuất</a>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <!-- HEADER THÔNG TIN NGƯỜI DÙNG -->
+        <div class="profile-header">
+            <img src="@Session["AvatarUrl"]" class="profile-avatar">
+            <div class="profile-info">
+                <h2>@Session["Username"]</h2>
+                <div class="profile-stats">
+                    <div><span>@ViewBag.PostCount</span> bài viết</div>
+                    <div><span>@ViewBag.FollowerCount</span> người theo dõi</div>
+                    <div>Đang theo dõi <span>@ViewBag.FollowingCount</span> người</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KHO ẢNH DẠNG LƯỚI -->
+        <div class="photo-grid">
+            @foreach (var post in Model)
+            {
+                <div class="photo-item">
+                    <img src="@post.ImageUrl" alt="Photo" />
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+﻿@{ <a href="@Url.Action("Index", "Home")" style="background-color: #4a90e2; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: inline-block;">
+
+</a> }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <title>PixelShare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .register-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            width: 320px;
+            text-align: center;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-box">
+        <h2 style="color: #4a90e2; margin-top: 0;">PixelShare</h2>
+        <p>Tạo tài khoản mới</p>
+
+        @if (ViewBag.Error != null)
+        {<div class="error">@ViewBag.Error</div>}
+
+        <!-- Lưu ý: enctype="multipart/form-data" là bắt buộc để upload được file ảnh -->
+        <form action="@Url.Action("Register", "Account")" method="post" enctype="multipart/form-data">
+            <input type="text" name="Username" class="form-control" placeholder="Tên hiển thị (Ví dụ: Khánh Trình)" required />
+            <input type="email" name="Email" class="form-control" placeholder="Địa chỉ Email" required />
+            <input type="password" name="PasswordHash" class="form-control" placeholder="Mật khẩu" required />
+
+            <div style="text-align: left; font-size: 13px; font-weight: bold; margin-top: 10px;">Chọn ảnh đại diện:</div>
+            <input type="file" name="AvatarFile" class="form-control" accept="image/*" required />
+
+            <button type="submit" class="btn-submit">Đăng ký</button>
+        </form>
+
+        <p style="font-size: 14px; margin-top: 20px;">Đã có tài khoản? <a href="@Url.Action("Login", "Account")" style="color: #4a90e2;">Đăng nhập</a></p>
+    </div>
+</body>
+</html>

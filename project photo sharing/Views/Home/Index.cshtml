@@ -1,0 +1,254 @@
+﻿@model List<project_photo_sharing.Models.PhotoPost>
+@{
+    <a href="@Url.Action("Index", "Home")" style="background-color: #4a90e2; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: inline-block;">
+
+    </a>
+    int currentUserId = Session["UserId"] != null ? (int)Session["UserId"] : 1;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PixelShare - Bảng tin</title>
+    <style>
+        /* ĐỊNH DẠNG TỔNG THỂ */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* THANH ĐIỀU HƯỚNG (NAVBAR) */
+        #top-banner {
+            background-color: white;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Tạo khoảng cách giữa các phần tử nằm ngang */
+        }
+
+        .btn-upload {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .avatar-small {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%; /* Bo tròn ảnh */
+            object-fit: cover;
+        }
+
+        /* KHUNG CHỨA NỘI DUNG (MAIN CONTENT) */
+        .main-container {
+            max-width: 600px;
+            margin: 20px auto; /* Căn giữa màn hình */
+            padding: 0 15px;
+        }
+
+        /* BÀI VIẾT (POST) */
+        .post-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .post-header {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .post-user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .post-username {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .post-image {
+            width: 100%;
+            display: block;
+        }
+
+        .post-body {
+            padding: 15px;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* HỘP THOẠI ĐĂNG ẢNH (MODAL) */
+        #upload-modal {
+            display: none; /* Ẩn đi mặc định, chỉ hiện khi bấm nút bằng JavaScript */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- THANH ĐIỀU HƯỚNG -->
+    <div id="top-banner">
+        <a href="@Url.Action("Index", "Home")" class="logo-brand">PixelShare</a>
+        <div class="user-menu">
+            <button class="btn-upload" onclick="openModal()">+ Đăng ảnh</button>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <img src="@(Session["AvatarUrl"] ?? "/images/default-avatar.png")" class="avatar-small">
+                <span style="font-weight: bold;">@(Session["Username"] ?? "Guest")</span>
+            </div>
+            <a href="@Url.Action("Logout", "Account")" style="color: red; text-decoration: none; font-size: 14px;">Đăng xuất</a>
+        </div>
+    </div>
+    <!-- KHUNG CHỨA BÀI VIẾT -->
+    <div class="main-container">
+        @foreach (var post in Model)
+        {
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="post-user-info">
+                        <img src="@post.Author.AvatarUrl" class="avatar-small">
+                        <div>
+                            <div class="post-username">@post.Author.Username</div>
+                            <div style="font-size: 12px; color: #888;">@post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    </div>
+
+                    @if (post.UserId == currentUserId)
+                    {
+                        <!-- Chỉ hiện nút Xóa nếu là ảnh của mình -->
+                        <form action="@Url.Action("DeletePost", "Home")" method="post" style="margin: 0;" onsubmit="return confirm('Bạn có muốn xóa?');">
+                            <input type="hidden" name="postId" value="@post.PostId" />
+                            <button type="submit" class="btn-action" style="color: red;">Xóa bài</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <!-- Hiện nút Follow nếu là ảnh của người khác -->
+                        <form action="@Url.Action("ToggleFollow", "Home")" method="post" style="margin: 0;">
+                            <input type="hidden" name="targetUserId" value="@post.UserId" />
+                            <button type="submit" class="btn-action" style="@(post.IsFollowedByCurrentUser ? "color: gray;" : "color: blue;")">
+                                @(post.IsFollowedByCurrentUser ? "Đang theo dõi" : "+ Theo dõi")
+                            </button>
+                        </form>
+                    }
+                </div>
+                <img src="@post.ImageUrl" class="post-image">
+
+                <div class="post-body">
+                    <div style="margin-bottom: 15px;">
+                        <span class="post-username">@post.Author.Username</span>
+                        <span>@post.Caption</span>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
+
+                    <!-- Khung Bình luận -->
+                    <div style="max-height: 100px; overflow-y: auto; margin-bottom: 10px; font-size: 14px;">
+                        @if (post.Comments != null)
+                        {
+                            foreach (var cmt in post.Comments)
+                            {
+                                <div style="margin-bottom: 5px;">
+                                    <b>@cmt.User.Username:</b> @cmt.Content
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <form action="@Url.Action("AddComment", "Home")" method="post" style="display: flex; gap: 5px;">
+                        <input type="hidden" name="postId" value="@post.PostId" />
+                        <input type="text" name="content" placeholder="Viết bình luận..." class="form-control" style="margin: 0; flex: 1;" required />
+                        <button type="submit" class="btn-action" style="background-color: white; border-color: transparent; color: blue; font-weight: bold;">Gửi</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- HỘP THOẠI ĐĂNG ẢNH TRÊN CÙNG 1 TRANG -->
+    <div id="upload-modal">
+        <div class="modal-content">
+            <h3 style="margin-top: 0;">Đăng ảnh mới</h3>
+            <form action="@Url.Action("UploadPhoto", "Home")" method="post" enctype="multipart/form-data">
+                <input type="file" name="imageFile" class="form-control" accept="image/*" required />
+                <textarea name="caption" rows="3" placeholder="Nhập chú thích (Caption)..." class="form-control" required></textarea>
+
+                <div style="text-align: right; margin-top: 10px;">
+                    <button type="button" class="btn-action" onclick="closeModal()">Hủy</button>
+                    <button type="submit" class="btn-upload">Tải lên</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT CƠ BẢN -->
+    <script>
+                function openModal() {
+                    document.getElementById('upload-modal').style.display = 'block';
+                }
+                function closeModal() {
+                    document.getElementById('upload-modal').style.display = 'none';
+                }
+    </script>
+</body>
+</html>
